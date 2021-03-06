@@ -39,18 +39,25 @@ pub struct ScadObject {
 
     children: Vec<ScadObject>,
 
-    //Decides wether or not the object should be drawn alone (by adding ! before)
+    //Decides whether or not the object should be drawn alone (by adding ! before)
     important: bool,
+
+    // TODO - document modifier precedence and update the tests
+    // '#'
+    highlight: bool,
+
+    // '%'
+    transparent: bool,
 }
 
 impl ScadObject {
     pub fn new(element: ScadElement) -> ScadObject {
         ScadObject {
             element,
-
             children: Vec::new(),
-
             important: false,
+            highlight: false,
+            transparent: false,
         }
     }
 
@@ -74,6 +81,10 @@ impl ScadObject {
 
         if self.important {
             result = String::from("!") + &result;
+        } else if self.highlight {
+            result = String::from("#") + &result;
+        } else if self.transparent {
+            result = String::from("%") + &result;
         }
 
         //Adding the code for all children, or ; if none exist
@@ -96,12 +107,38 @@ impl ScadObject {
         result
     }
 
+    pub fn is_important(&self) -> bool {
+        self.important
+    }
+
+    pub fn is_highlighted(&self) -> bool {
+        self.highlight
+    }
+
+    pub fn is_transparent(&self) -> bool {
+        self.transparent
+    }
+
     /**
       Marks the object as important. This will prepend the object code
       with an ! which tells scad to only render that object and its children.
     */
-    pub fn is_important(&mut self) {
+    pub fn set_important(&mut self) {
         self.important = true;
+        self.highlight = false;
+        self.transparent = false;
+    }
+
+    pub fn set_highlighted(&mut self) {
+        self.important = false;
+        self.highlight = true;
+        self.transparent = false;
+    }
+
+    pub fn set_transparent(&mut self) {
+        self.important = false;
+        self.highlight = false;
+        self.transparent = true;
     }
 
     /**
@@ -111,6 +148,22 @@ impl ScadObject {
     */
     pub fn important(mut self) -> ScadObject {
         self.important = true;
+        self.transparent = false;
+        self.highlight = false;
+        self
+    }
+
+    pub fn highlight(mut self) -> ScadObject {
+        self.important = false;
+        self.highlight = true;
+        self.transparent = false;
+        self
+    }
+
+    pub fn transparent(mut self) -> ScadObject {
+        self.important = false;
+        self.highlight = false;
+        self.transparent = true;
         self
     }
 }
@@ -135,10 +188,22 @@ mod statement_tests {
             "translate([0,0,0])\n{\n\tcube([1,1,1]);\n}"
         );
 
-        test_stmt.is_important();
+        test_stmt.set_important();
         assert_eq!(
             test_stmt.get_code(),
             "!translate([0,0,0])\n{\n\tcube([1,1,1]);\n}"
+        );
+
+        test_stmt.set_highlighted();
+        assert_eq!(
+            test_stmt.get_code(),
+            "#translate([0,0,0])\n{\n\tcube([1,1,1]);\n}"
+        );
+
+        test_stmt.set_transparent();
+        assert_eq!(
+            test_stmt.get_code(),
+            "%translate([0,0,0])\n{\n\tcube([1,1,1]);\n}"
         );
 
         let test_2 = ScadObject::new(ScadElement::Union).important();
