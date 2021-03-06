@@ -1,4 +1,4 @@
-extern crate nalgebra as na;
+use crate::na;
 
 /**
     Creates an scad object with optional children
@@ -150,18 +150,10 @@ macro_rules! qstruct
     }
 }
 
-#[allow(unused_imports)]
-#[allow(unused_attributes)]
 #[cfg(test)]
 mod macro_test {
-    extern crate nalgebra as na;
-
-    use scad_element::CircleType::*;
-    use scad_element::ScadElement::*;
-    use scad_element::*;
-    use scad_object::*;
-
-    use scad_macros::*;
+    use super::*;
+    use crate::{Cube, Cylinder, Radius, ScadObject, Translate};
 
     #[test]
     fn vec3_test() {
@@ -208,8 +200,6 @@ mod macro_test {
 
 #[cfg(test)]
 mod qstruct_test {
-    extern crate nalgebra as na;
-
     qstruct! {
         Test1(param1: f32, param2: u16)
         {

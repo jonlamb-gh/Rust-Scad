@@ -1,6 +1,4 @@
-use scad_element::*;
-
-use std::vec::*;
+use crate::ScadElement;
 
 /**
     An scad object which is a single scad element and can have zero or more child objects
@@ -119,9 +117,8 @@ impl ScadObject {
 
 #[cfg(test)]
 mod statement_tests {
-    extern crate nalgebra as na;
-    use scad_element::*;
-    use scad_object::*;
+    use super::*;
+    use crate::na;
 
     #[test]
     fn simple_stmt_test() {

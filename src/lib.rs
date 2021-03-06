@@ -5,7 +5,8 @@
 
     First, let's look at a simple example of the crate being used.
 
-    ```
+    # TODO un-ignore
+    ```ignore
     //"Import" the module along with the macros
     #[macro_use]
     extern crate scad;
@@ -139,15 +140,16 @@
     ```
 */
 
-pub mod common_objects;
+pub use nalgebra as na;
+
+mod common_objects;
 mod scad_element;
 mod scad_file;
+mod scad_macros;
 mod scad_object;
 mod scad_type;
 
-#[macro_use]
-pub mod scad_macros;
-
+// TODO - consider a prelude.rs
 pub use scad_element::CircleType::*;
 pub use scad_element::ScadElement::*;
 pub use scad_element::*;

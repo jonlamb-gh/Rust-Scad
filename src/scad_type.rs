@@ -1,7 +1,4 @@
-extern crate nalgebra as na;
-
-use std::string::String;
-use std::vec::Vec;
+use crate::na;
 
 ///Trait for converting from rust types to strings compatible with openscad
 pub trait ScadType {
@@ -73,8 +70,7 @@ impl ScadType for String {
 
 #[cfg(test)]
 mod type_tests {
-    extern crate nalgebra as na;
-    use scad_type::*;
+    use super::*;
 
     #[test]
     fn type_test() {

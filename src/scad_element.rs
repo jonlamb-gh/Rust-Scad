@@ -1,8 +1,4 @@
-use scad_type::*;
-use std::string::*;
-extern crate nalgebra as na;
-
-use std::vec::Vec;
+use crate::{na, ScadType};
 
 ///Since scad allows creation of circle like objects using either radius or diameter,
 ///this enum specifies which format to use
@@ -322,10 +318,7 @@ impl ScadElement {
 
 #[cfg(test)]
 mod scad_tests {
-    extern crate nalgebra as na;
-
-    use scad_element::*;
-    use scad_type::*;
+    use super::*;
 
     #[test]
     fn simple_enum_test() {

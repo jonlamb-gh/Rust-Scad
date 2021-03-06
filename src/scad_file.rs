@@ -1,9 +1,5 @@
-use scad_object::*;
-use std::fs::File;
-use std::io::prelude::*;
-use std::path::Path;
-use std::string::String;
-use std::vec::Vec;
+use crate::ScadObject;
+use std::{fs, io, path::Path};
 
 /**
     Object that stores scad objects along with global parameters for
@@ -66,25 +62,8 @@ impl ScadFile {
      The function will return false and print a message to the console if
      writing fails.
     */
-    pub fn write_to_file(&self, path: String) -> bool {
-        //Writing the result to file
-        let path = Path::new(&path);
-
-        // Open a file in write-only mode, returns `io::Result<File>`
-        let mut file = match File::create(&path) {
-            Err(_) => {
-                println!("Couldn't open file for writing");
-                return false;
-            }
-            Ok(file) => file,
-        };
-
-        if file.write(self.get_code().as_bytes()).is_err() {
-            println!("Failed to write to output file");
-            return false;
-        };
-
-        true
+    pub fn write_to_file<P: AsRef<Path>>(&self, path: P) -> io::Result<()> {
+        fs::write(&path, self.get_code().as_bytes())
     }
 }
 
@@ -96,14 +75,8 @@ impl Default for ScadFile {
 
 #[cfg(test)]
 mod file_tests {
-    use scad_element::*;
-    use scad_object::*;
-
-    use scad_file::ScadFile;
-
-    use std::fs;
-    use std::fs::File;
-    use std::io::prelude::*;
+    use super::*;
+    use crate::ScadElement;
 
     #[test]
     fn detail_test() {
@@ -124,42 +97,15 @@ mod file_tests {
 
     #[test]
     fn file_test() {
+        let out_dir = tempfile::tempdir().unwrap();
+        let file_path = out_dir.path().join("test.scad");
         let mut sfile = ScadFile::new();
 
         sfile.detail = 30;
 
-        let write_success = sfile.write_to_file(String::from("test.scad"));
+        sfile.write_to_file(&file_path).unwrap();
 
-        let mut correct_content = false;
-        //Read the content of the file
-        match File::open("test.scad") {
-            Ok(mut f) => {
-                let mut file_content = String::new();
-                match f.read_to_string(&mut file_content) {
-                    Ok(_) => {
-                        if file_content == sfile.get_code() {
-                            correct_content = true;
-                        } else {
-                            println!("Expected {}, Found {}", file_content, sfile.get_code());
-                        }
-                    }
-                    Err(_) => {
-                        println!("Failed to read content from output file");
-                    }
-                };
-            }
-            Err(_) => {
-                println!("Failed to open file for reading");
-            }
-        };
-
-        //Remove the file we created
-        match fs::remove_file("test.scad") {
-            Ok(_) => {}
-            Err(_) => {}
-        };
-
-        assert!(write_success);
-        assert!(correct_content);
+        let file_content = fs::read_to_string(&file_path).unwrap();
+        assert_eq!(file_content, sfile.get_code());
     }
 }

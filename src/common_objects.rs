@@ -1,9 +1,6 @@
-extern crate nalgebra as na;
-
-use scad_element::CircleType;
-use scad_element::ScadElement::*;
-use scad_macros::*;
-use scad_object::*;
+use crate::{
+    na, vec2, vec3, CircleType, Cube, Cylinder, ScadObject, Square, Translate, Translate2d,
+};
 
 /**
   Creates a cube that is centered on the specified axis
@@ -45,8 +42,6 @@ pub fn centered_cylinder(height: f32, size: CircleType) -> ScadObject {
 
 #[cfg(test)]
 mod tests {
-    extern crate nalgebra as na;
-
     use super::*;
 
     #[test]
