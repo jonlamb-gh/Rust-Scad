@@ -39,6 +39,8 @@ pub struct ScadObject {
 
     children: Vec<ScadObject>,
 
+    disable: bool,
+
     //Decides whether or not the object should be drawn alone (by adding ! before)
     important: bool,
 
@@ -55,6 +57,7 @@ impl ScadObject {
         ScadObject {
             element,
             children: Vec::new(),
+            disable: false,
             important: false,
             highlight: false,
             transparent: false,
@@ -107,6 +110,10 @@ impl ScadObject {
         result
     }
 
+    pub fn is_disabled(&self) -> bool {
+        self.disable
+    }
+
     pub fn is_important(&self) -> bool {
         self.important
     }
@@ -119,26 +126,34 @@ impl ScadObject {
         self.transparent
     }
 
+    pub fn set_disable(&mut self) {
+        self.all_modifiers_off();
+        self.disable = true;
+    }
+
     /**
       Marks the object as important. This will prepend the object code
       with an ! which tells scad to only render that object and its children.
     */
     pub fn set_important(&mut self) {
+        self.all_modifiers_off();
         self.important = true;
-        self.highlight = false;
-        self.transparent = false;
     }
 
     pub fn set_highlighted(&mut self) {
-        self.important = false;
+        self.all_modifiers_off();
         self.highlight = true;
-        self.transparent = false;
     }
 
     pub fn set_transparent(&mut self) {
-        self.important = false;
-        self.highlight = false;
+        self.all_modifiers_off();
         self.transparent = true;
+    }
+
+    pub fn disable(mut self) -> ScadObject {
+        self.all_modifiers_off();
+        self.disable = true;
+        self
     }
 
     /**
@@ -147,24 +162,28 @@ impl ScadObject {
       change the binding to mut
     */
     pub fn important(mut self) -> ScadObject {
+        self.all_modifiers_off();
         self.important = true;
-        self.transparent = false;
-        self.highlight = false;
         self
     }
 
     pub fn highlight(mut self) -> ScadObject {
-        self.important = false;
+        self.all_modifiers_off();
         self.highlight = true;
-        self.transparent = false;
         self
     }
 
     pub fn transparent(mut self) -> ScadObject {
-        self.important = false;
-        self.highlight = false;
+        self.all_modifiers_off();
         self.transparent = true;
         self
+    }
+
+    fn all_modifiers_off(&mut self) {
+        self.disable = false;
+        self.important = false;
+        self.highlight = false;
+        self.transparent = false;
     }
 }
 
