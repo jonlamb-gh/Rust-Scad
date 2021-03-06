@@ -55,7 +55,7 @@
 
     ## The `scad!` macro
     The most important part of the crate is the `scad!` macro. The first parameter
-    of the macro is the element type of the object we want to create which should be 
+    of the macro is the element type of the object we want to create which should be
     an instance of the `ScadElement` enum. If you only want to create a single scad
     object, you can simply end the macro invocation after the parent like this:
 
@@ -101,26 +101,26 @@
     ```
 
     ## Object parameters
-    Almost all `ScadElements` take additional parameters that describe them. They 
+    Almost all `ScadElements` take additional parameters that describe them. They
     are enum parameters so you specify them as you would with enums. Some parameters
-    are regular built in types like `f32` but there are some special ones which are 
+    are regular built in types like `f32` but there are some special ones which are
     described below.
 
     ### Vectors
     The most common parameter is a vector. This library uses the nalgebra crate for vectors
-    but writing `na::Vector3::new(x, y, z)` each time you want a vector is tedious which is 
+    but writing `na::Vector3::new(x, y, z)` each time you want a vector is tedious which is
     why the library contains the functions `vec3(x, y, z)` and `vec2(x, y)`. They are simply
     functions that call the equivalent nalgebra constructor.
 
     ### Circle radii and diameters.
     Just like regular OpenSCAD, you can create round objects by either specifying the diameter
-    or radius of the circle. This is done using the `CircleType` enum which is either 
+    or radius of the circle. This is done using the `CircleType` enum which is either
     `Diameter(d)` or `Radius(r)`.
 
     ## Creating objects in loops
     In most cases, the `scad!` macro should be good enoough to create objects, but one
-    case where it is not,  is when you want to create several objects in a loop and 
-    add them as children to a specific object. In this case, you have to use the 
+    case where it is not,  is when you want to create several objects in a loop and
+    add them as children to a specific object. In this case, you have to use the
     `add_child` method of the `ScadObject`  struct manually
 
     ```
@@ -139,20 +139,20 @@
     ```
 */
 
-mod scad_element;
-mod scad_object;
-mod scad_file;
-mod scad_type;
 pub mod common_objects;
+mod scad_element;
+mod scad_file;
+mod scad_object;
+mod scad_type;
 
 #[macro_use]
 pub mod scad_macros;
 
-pub use scad_element::*;
-pub use scad_object::*;
-pub use scad_element::ScadElement::*;
 pub use scad_element::CircleType::*;
+pub use scad_element::ScadElement::*;
+pub use scad_element::*;
 pub use scad_macros::*;
+pub use scad_object::*;
 
 pub use scad_file::*;
 pub use scad_type::*;
