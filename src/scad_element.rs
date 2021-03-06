@@ -2,7 +2,7 @@ use crate::{na, ScadType};
 
 ///Since scad allows creation of circle like objects using either radius or diameter,
 ///this enum specifies which format to use
-#[derive(Clone)]
+#[derive(Copy, Clone, PartialEq, PartialOrd, Debug)]
 pub enum CircleType {
     Radius(f32),
     Diameter(f32),
@@ -14,7 +14,7 @@ pub enum CircleType {
 ///
 ///These are in a struct because  there are so many of them and
 ///most of them  can have a default value.
-#[derive(Clone)]
+#[derive(Copy, Clone, PartialEq, PartialOrd, Debug)]
 pub struct LinExtrudeParams {
     pub height: f32,
     pub center: bool,
@@ -53,7 +53,7 @@ impl ScadType for LinExtrudeParams {
 /////////////////////////////////////////////////////////////////////////////
 
 ///Parameters for the rotate extrude function
-#[derive(Clone)]
+#[derive(Copy, Clone, PartialEq, PartialOrd, Debug)]
 pub struct RotateExtrudeParams {
     pub angle: f32,
     pub convexity: usize,
@@ -77,7 +77,7 @@ impl ScadType for RotateExtrudeParams {
 /**
  Parameters for the polygon function.
 */
-#[derive(Clone)]
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
 enum PolygonPathType {
     Default,
     SingleVector(Vec<usize>),
@@ -93,7 +93,7 @@ impl ScadType for PolygonPathType {
     }
 }
 
-#[derive(Clone)]
+#[derive(Clone, PartialEq, PartialOrd, Debug)]
 pub struct PolygonParameters {
     points: Vec<na::Vector2<f32>>,
     path: PolygonPathType,
@@ -136,7 +136,7 @@ impl ScadType for PolygonParameters {
     }
 }
 /////////////////////////////////////////////////////////////////////////////
-#[derive(Clone)]
+#[derive(Copy, Clone, PartialEq, PartialOrd, Debug)]
 pub enum OffsetType {
     Delta(f32),
     Radius(f32),
@@ -157,7 +157,7 @@ impl ScadType for OffsetType {
 ///
 ///Most of these have  the same name as the openscad counterparts so see
 ///their documentation for details
-#[derive(Clone)]
+#[derive(Clone, PartialEq, PartialOrd, Debug)]
 pub enum ScadElement {
     //Transformation stuff
     Translate(na::Vector3<f32>),

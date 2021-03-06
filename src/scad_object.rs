@@ -33,7 +33,7 @@ use crate::ScadElement;
     more children to an scad object created by the macro, you can simply use the
     `add_child` function on the result of the macro.
 */
-#[derive(Clone)]
+#[derive(Clone, PartialEq, PartialOrd, Debug)]
 pub struct ScadObject {
     element: ScadElement,
 

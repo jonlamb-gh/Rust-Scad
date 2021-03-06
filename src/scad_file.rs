@@ -5,9 +5,9 @@ use std::{fs, io, path::Path};
     Object that stores scad objects along with global parameters for
     the objects. Also has methods for writing the  data to files.
 */
+#[derive(Clone, PartialEq, PartialOrd, Debug)]
 pub struct ScadFile {
     objects: Vec<ScadObject>,
-
     detail: i32,
 }
 
