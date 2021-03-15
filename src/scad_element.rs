@@ -173,6 +173,7 @@ pub enum ScadElement {
     Hull,
     Intersection,
     Minkowski,
+    Render,
 
     //Object stuff
     Cube(na::Vector3<f32>),
@@ -311,6 +312,7 @@ impl ScadElement {
             ScadElement::Hull => String::from("hull()"),
             ScadElement::Minkowski => String::from("minkowski()"),
             ScadElement::Intersection => String::from("intersection()"),
+            ScadElement::Render => String::from("render()"),
         }
     }
 }

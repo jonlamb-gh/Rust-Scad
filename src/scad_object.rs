@@ -79,6 +79,8 @@ impl ScadObject {
     pub fn get_code(&self) -> String {
         let mut result: String;
 
+        let is_special_render_element = matches!(self.element, ScadElement::Render);
+
         //Get the code for the current element
         result = self.element.clone().get_code();
 
@@ -93,7 +95,13 @@ impl ScadObject {
         //Adding the code for all children, or ; if none exist
         result = result
             + &(match self.children.len() {
-                0 => String::from(";"),
+                0 => {
+                    if !is_special_render_element {
+                        String::from(";")
+                    } else {
+                        String::new()
+                    }
+                }
                 _ => {
                     let mut child_code = String::from("\n{\n");
                     for stmt in &self.children {
